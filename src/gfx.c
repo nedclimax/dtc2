@@ -199,7 +199,7 @@ static GFX_Event *w32_push_event(GFX_EventType type, W32_Window *window) {
 	return event;
 }
 
-static W32_Window *os_w32_window_from_hwnd(HWND hwnd) {
+static W32_Window *w32_window_from_hwnd(HWND hwnd) {
 	W32_Window *result = 0;
 	for (W32_Window *w = w32_gfx_state.first_window; w; w = w->next) {
 		if (w->hwnd == hwnd) {
@@ -291,7 +291,7 @@ GFX_EventList gfx_get_events(void) { // @DangerousThreadsCrew
 	arena_clear(w32_gfx_state.event_arena);
 	MSG msg;
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-		W32_Window *window = os_w32_window_from_hwnd(msg.hwnd);
+		W32_Window *window = w32_window_from_hwnd(msg.hwnd);
 		switch (msg.message) {
 			case WM_CLOSE: {
 				w32_push_event(GFX_EventType_WindowClose, window);

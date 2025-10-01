@@ -42,6 +42,124 @@ static struct {
 	CRITICAL_SECTION service_mutex;
 } w32_gfx_state;
 
+static GFX_Key w32_key_from_vkey_table[] = {
+	['A']           = GFX_Key_A,
+	['B']           = GFX_Key_B,
+	['C']           = GFX_Key_C,
+	['D']           = GFX_Key_D,
+	['E']           = GFX_Key_E,
+	['F']           = GFX_Key_F,
+	['G']           = GFX_Key_G,
+	['H']           = GFX_Key_H,
+	['I']           = GFX_Key_I,
+	['J']           = GFX_Key_J,
+	['K']           = GFX_Key_K,
+	['L']           = GFX_Key_L,
+	['M']           = GFX_Key_M,
+	['N']           = GFX_Key_N,
+	['O']           = GFX_Key_O,
+	['P']           = GFX_Key_P,
+	['Q']           = GFX_Key_Q,
+	['R']           = GFX_Key_R,
+	['S']           = GFX_Key_S,
+	['T']           = GFX_Key_T,
+	['U']           = GFX_Key_U,
+	['V']           = GFX_Key_V,
+	['W']           = GFX_Key_W,
+	['X']           = GFX_Key_X,
+	['Y']           = GFX_Key_Y,
+	['Z']           = GFX_Key_Z,
+	['0']           = GFX_Key_0,
+	['1']           = GFX_Key_1,
+	['2']           = GFX_Key_2,
+	['3']           = GFX_Key_3,
+	['4']           = GFX_Key_4,
+	['5']           = GFX_Key_5,
+	['6']           = GFX_Key_6,
+	['7']           = GFX_Key_7,
+	['8']           = GFX_Key_8,
+	['9']           = GFX_Key_9,
+	[VK_NUMPAD0]    = GFX_Key_0,
+	[VK_NUMPAD1]    = GFX_Key_1,
+	[VK_NUMPAD2]    = GFX_Key_2,
+	[VK_NUMPAD3]    = GFX_Key_3,
+	[VK_NUMPAD4]    = GFX_Key_4,
+	[VK_NUMPAD5]    = GFX_Key_5,
+	[VK_NUMPAD6]    = GFX_Key_6,
+	[VK_NUMPAD7]    = GFX_Key_7,
+	[VK_NUMPAD8]    = GFX_Key_8,
+	[VK_NUMPAD9]    = GFX_Key_9,
+	[VK_F1]         = GFX_Key_F1,
+	[VK_F2]         = GFX_Key_F2,
+	[VK_F3]         = GFX_Key_F3,
+	[VK_F4]         = GFX_Key_F4,
+	[VK_F5]         = GFX_Key_F5,
+	[VK_F6]         = GFX_Key_F6,
+	[VK_F7]         = GFX_Key_F7,
+	[VK_F8]         = GFX_Key_F8,
+	[VK_F9]         = GFX_Key_F9,
+	[VK_F10]        = GFX_Key_F10,
+	[VK_F11]        = GFX_Key_F11,
+	[VK_F12]        = GFX_Key_F12,
+	[VK_F13]        = GFX_Key_F13,
+	[VK_F14]        = GFX_Key_F14,
+	[VK_F15]        = GFX_Key_F15,
+	[VK_F16]        = GFX_Key_F16,
+	[VK_F17]        = GFX_Key_F17,
+	[VK_F18]        = GFX_Key_F18,
+	[VK_F19]        = GFX_Key_F19,
+	[VK_F20]        = GFX_Key_F20,
+	[VK_F21]        = GFX_Key_F21,
+	[VK_F22]        = GFX_Key_F22,
+	[VK_F23]        = GFX_Key_F23,
+	[VK_F24]        = GFX_Key_F24,
+	[VK_SPACE]      = GFX_Key_Space,
+	[VK_OEM_3]      = GFX_Key_Tick,
+	[VK_OEM_MINUS]  = GFX_Key_Minus,
+	[VK_OEM_PLUS]   = GFX_Key_Equal,
+	[VK_OEM_4]      = GFX_Key_LeftBracket,
+	[VK_OEM_6]      = GFX_Key_RightBracket,
+	[VK_OEM_1]      = GFX_Key_Semicolon,
+	[VK_OEM_7]      = GFX_Key_Quote,
+	[VK_OEM_COMMA]  = GFX_Key_Comma,
+	[VK_OEM_PERIOD] = GFX_Key_Period,
+	[VK_OEM_2]      = GFX_Key_Slash,
+	[VK_OEM_5]      = GFX_Key_BackSlash,
+	[VK_TAB]        = GFX_Key_Tab,
+	[VK_PAUSE]      = GFX_Key_Pause,
+	[VK_ESCAPE]     = GFX_Key_Esc,
+	[VK_UP]         = GFX_Key_Up,
+	[VK_LEFT]       = GFX_Key_Left,
+	[VK_DOWN]       = GFX_Key_Down,
+	[VK_RIGHT]      = GFX_Key_Right,
+	[VK_BACK]       = GFX_Key_Backspace,
+	[VK_RETURN]     = GFX_Key_Return,
+	[VK_DELETE]     = GFX_Key_Delete,
+	[VK_INSERT]     = GFX_Key_Insert,
+	[VK_PRIOR]      = GFX_Key_PageUp,
+	[VK_NEXT]       = GFX_Key_PageDown,
+	[VK_HOME]       = GFX_Key_Home,
+	[VK_END]        = GFX_Key_End,
+	[VK_CAPITAL]    = GFX_Key_CapsLock,
+	[VK_NUMLOCK]    = GFX_Key_NumLock,
+	[VK_SCROLL]     = GFX_Key_ScrollLock,
+	[VK_APPS]       = GFX_Key_Menu,
+	[VK_CONTROL]    = GFX_Key_Ctrl,
+	[VK_LCONTROL]   = GFX_Key_Ctrl,
+	[VK_RCONTROL]   = GFX_Key_Ctrl,
+	[VK_SHIFT]      = GFX_Key_Shift,
+	[VK_LSHIFT]     = GFX_Key_Shift,
+	[VK_RSHIFT]     = GFX_Key_Shift,
+	[VK_MENU]       = GFX_Key_Alt,
+	[VK_LMENU]      = GFX_Key_Alt,
+	[VK_RMENU]      = GFX_Key_Alt,
+	[VK_DIVIDE]     = GFX_Key_NumSlash,
+	[VK_MULTIPLY]   = GFX_Key_NumStar,
+	[VK_SUBTRACT]   = GFX_Key_NumMinus,
+	[VK_ADD]        = GFX_Key_NumPlus,
+	[VK_DECIMAL]    = GFX_Key_NumPeriod,
+};
+
 #define w32_DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 ((void*)-4)
 
 /* NOTE: SendMessageW is synchronous where as PostMessageW is asynchronous */
@@ -158,11 +276,26 @@ static LRESULT CALLBACK w32_gfx_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPA
 		case WM_CLOSE:
 			PostThreadMessageW(w32_gfx_state.gfx_tid, msg, (WPARAM)hwnd, lparam);
 			break;
-		// NOTE(casey): Anything you want the application to handle, forward to the main thread
-		// here.
+		// NOTE(casey): Anything we want the application to handle, we forward to the
+		// main thread here.
+		case WM_SYSKEYDOWN:
+		case WM_SYSKEYUP: {
+			if (wparam != VK_MENU && (wparam < VK_F1 || VK_F24 < wparam || wparam == VK_F4)) {
+				result = DefWindowProcW(hwnd, msg, wparam, lparam);
+			}
+		} // fallthrough;
+		case WM_KEYUP:
+		case WM_KEYDOWN:
+		case WM_KILLFOCUS:
 		case WM_MOUSEMOVE:
-		case WM_LBUTTONDOWN:
+		case WM_MOUSEWHEEL:
+		case WM_MOUSEHWHEEL:
 		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP:
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
 			PostThreadMessageW(w32_gfx_state.gfx_tid, msg, wparam, lparam);
 			break;
 		default:
@@ -284,14 +417,110 @@ void gfx_close_window(GFX_Handle window) { // @DangerousThreadsCrew
 }
 
 GFX_EventList gfx_get_events(void) { // @DangerousThreadsCrew
-	memset(&w32_gfx_state.event_list, 0, sizeof(w32_gfx_state.event_list));
 	arena_clear(w32_gfx_state.event_arena);
+	memset(&w32_gfx_state.event_list, 0, sizeof(w32_gfx_state.event_list));
+
 	MSG msg;
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+		b8 release = 0;
 		W32_Window *window = w32_window_from_hwnd(msg.hwnd);
+
 		switch (msg.message) {
 			case WM_CLOSE: {
-				w32_push_event(GFX_EventType_WindowClose, window);
+				W32_Window *w = (W32_Window *)msg.wParam; // NOTE: see `w32_gfx_wnd_proc`
+				w32_push_event(GFX_EventType_WindowClose, w);
+			} break;
+
+			case WM_LBUTTONUP:
+			case WM_MBUTTONUP:
+			case WM_RBUTTONUP: {
+				release = 1;
+			} // fallthrough;
+			case WM_LBUTTONDOWN:
+			case WM_MBUTTONDOWN:
+			case WM_RBUTTONDOWN: {
+				GFX_Event *event = w32_push_event(release ? GFX_EventType_Release : GFX_EventType_Press, window);
+				switch (msg.message) {
+					case WM_LBUTTONUP: case WM_LBUTTONDOWN: event->key = GFX_Key_LeftMouseButton; break;
+					case WM_MBUTTONUP: case WM_MBUTTONDOWN: event->key = GFX_Key_MiddleMouseButton; break;
+					case WM_RBUTTONUP: case WM_RBUTTONDOWN: event->key = GFX_Key_RightMouseButton; break;
+				}
+				event->pos[0] = (f32)(s16)LOWORD(msg.lParam);
+				event->pos[1] = (f32)(s16)HIWORD(msg.lParam);
+				if (release) {
+					ReleaseCapture();
+				} else {
+					SetCapture(msg.hwnd);
+				}
+			} break;
+
+			case WM_MOUSEMOVE: {
+				GFX_Event *event = w32_push_event(GFX_EventType_MouseMove, window);
+				event->pos[0] = (f32)(s16)LOWORD(msg.lParam);
+				event->pos[1] = (f32)(s16)HIWORD(msg.lParam);
+			} break;
+
+			case WM_MOUSEWHEEL: {
+				s16 wheel_delta = HIWORD(msg.wParam);
+				GFX_Event *event = w32_push_event(GFX_EventType_Scroll, window);
+				POINT p;
+				p.x = (s32)(s16)LOWORD(msg.lParam);
+				p.y = (s32)(s16)HIWORD(msg.lParam);
+				ScreenToClient(window->hwnd, &p);
+				event->pos[0] = (f32)p.x;
+				event->pos[1] = (f32)p.y;
+				event->delta[0] = 0.f;
+				event->delta[1] = -(f32)wheel_delta;
+			} break;
+
+			case WM_MOUSEHWHEEL: {
+				s16 wheel_delta = HIWORD(msg.wParam);
+				GFX_Event *event = w32_push_event(GFX_EventType_Scroll, window);
+				POINT p;
+				p.x = (s32)(s16)LOWORD(msg.lParam);
+				p.y = (s32)(s16)HIWORD(msg.lParam);
+				ScreenToClient(window->hwnd, &p);
+				event->pos[0] = (f32)p.x;
+				event->pos[1] = (f32)p.y;
+				event->delta[0] = (f32)wheel_delta;
+				event->delta[1] = 0.f;
+			} break;
+
+			case WM_SYSKEYDOWN:
+			case WM_SYSKEYUP:
+			case WM_KEYDOWN:
+			case WM_KEYUP: {
+				b32 was_down = (msg.lParam & (1 << 30));
+				b32 is_down  = !(msg.lParam & (1 << 31));
+
+				b8 is_repeat = 0;
+				if (!is_down) {
+					release = 1;
+				} else if (was_down) {
+					is_repeat = 1;
+				}
+
+				b8 right_sided = 0;
+				if ((msg.lParam & (1 << 24)) &&
+				    (msg.wParam == VK_CONTROL || msg.wParam == VK_RCONTROL ||
+				     msg.wParam == VK_MENU || msg.wParam == VK_RMENU ||
+				     msg.wParam == VK_SHIFT || msg.wParam == VK_RSHIFT)) {
+					right_sided = 1;
+				}
+
+				GFX_Event *event = w32_push_event(release ? GFX_EventType_Release : GFX_EventType_Press, window);
+				event->key = w32_key_from_vkey_table[msg.wParam];
+				event->repeat_count = msg.lParam & 0xffff;
+				event->is_repeat = is_repeat;
+				event->right_sided = right_sided;
+				if (event->key == GFX_Key_Alt   && event->modifiers & GFX_Modifier_Alt)   event->modifiers &= ~GFX_Modifier_Alt;
+				if (event->key == GFX_Key_Ctrl  && event->modifiers & GFX_Modifier_Ctrl)  event->modifiers &= ~GFX_Modifier_Ctrl;
+				if (event->key == GFX_Key_Shift && event->modifiers & GFX_Modifier_Shift) event->modifiers &= ~GFX_Modifier_Shift;
+			} break;
+
+			case WM_KILLFOCUS: {
+				w32_push_event(GFX_EventType_WindowLoseFocus, window);
+				ReleaseCapture();
 			} break;
 		}
 	}

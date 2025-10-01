@@ -17,6 +17,7 @@ static GFX_Event *gfx_event_list_push_new(Arena *arena, GFX_EventList *list, GFX
 
 extern IMAGE_DOS_HEADER __ImageBase;
 #define w32_gfx_hinstance ((HINSTANCE)(&__ImageBase))
+#define w32_gfx_class_name L"graphical-window"
 
 typedef struct W32_Window {
 	struct W32_Window *next;
@@ -112,7 +113,7 @@ static DWORD WINAPI w32_service_thread_proc(void *param) { // @DangerousThreadsC
 
 	WNDCLASSEXW wc = {
 		.cbSize = sizeof(wc),
-		.lpfnWndProc = &w32_service_wnd_proc,
+		.lpfnWndProc = w32_service_wnd_proc,
 		.hInstance = w32_gfx_hinstance,
 		.lpszClassName = L"DTCClass",
 	};
@@ -186,7 +187,7 @@ static W32_Window *w32_window_alloc(void) {
 
 static void w32_window_release(W32_Window *window) { // @DangerousThreadsCrew
 	ReleaseDC(window->hwnd, window->hdc);
-	SendMessageW(w32_gfx_state.service_hwnd, DESTROY_DANGEROUS_WINDOW, (u64)window->hwnd, 0);
+	SendMessageW(w32_gfx_state.service_hwnd, DESTROY_DANGEROUS_WINDOW, (WPARAM)window->hwnd, 0);
 	DLLRemove(w32_gfx_state.first_window, w32_gfx_state.last_window, window);
 	SLLStackPush(w32_gfx_state.free_window, window);
 }
@@ -233,6 +234,17 @@ void gfx_init(void) {
 	w32_gfx_state.service_thread = CreateThread(NULL, 0, w32_service_thread_proc, NULL, 0, &w32_gfx_state.service_tid);
 	SleepConditionVariableCS(&w32_gfx_state.service_cv, &w32_gfx_state.service_mutex, INFINITE);
 	LeaveCriticalSection(&w32_gfx_state.service_mutex);
+
+	// register window class
+	WNDCLASSEXW wc = {
+		.cbSize = sizeof(wc),
+		.lpfnWndProc = w32_gfx_wnd_proc,
+		.hInstance = w32_gfx_hinstance,
+		.lpszClassName = w32_gfx_class_name,
+		.hCursor = LoadCursorA(0, IDC_ARROW),
+		.style = CS_VREDRAW|CS_HREDRAW,
+	};
+	RegisterClassExW(&wc);
 }
 
 void gfx_quit(void) {
@@ -244,20 +256,6 @@ void gfx_quit(void) {
 }
 
 GFX_Handle gfx_open_window(s32 width, s32 height, Str8 title) { // @DangerousThreadsCrew
-	static WCHAR *class_name = NULL;
-	if (!class_name) {
-		class_name = L"graphical-window";
-		WNDCLASSEXW wc = {
-			.cbSize = sizeof(wc),
-			.lpfnWndProc = w32_gfx_wnd_proc,
-			.hInstance = w32_gfx_hinstance,
-			.lpszClassName = class_name,
-			.hCursor = LoadCursorA(0, IDC_ARROW),
-			.style = CS_VREDRAW|CS_HREDRAW,
-		};
-		RegisterClassExW(&wc);
-	}
-
 	Temp scratch = scratch_begin(NULL, 0);
 	Str16 title16 = str16_from_8(scratch.arena, title);
 	TheBaby baby = {
@@ -272,12 +270,11 @@ GFX_Handle gfx_open_window(s32 width, s32 height, Str8 title) { // @DangerousThr
 		.hInstance = w32_gfx_hinstance,
 	};
 	HWND hwnd = (HWND)SendMessageW(w32_gfx_state.service_hwnd, CREATE_DANGEROUS_WINDOW, (WPARAM)&baby, 0);
-	scratch_end(scratch);
-
 	W32_Window *window = w32_window_alloc();
 	window->hwnd = hwnd;
 	window->hdc = GetDC(hwnd);
 	SetStretchBltMode(window->hdc, COLORONCOLOR);
+	scratch_end(scratch);
 	GFX_Handle result = { (u64)window };
 	return result;
 }

@@ -8,7 +8,7 @@ It may seem like a strange thing to do, but unfortunately Win32 internals have s
 
 \- Casey
 
-This example is slightly more complex as it aims to wrap the example code in an API not disimilar to any other library like SDL or GLFW.
+This example is slightly more complex as it aims to wrap the example code in an API not dissimilar to any other library like SDL or GLFW.
 
 The API for creating/destroying windows looks like this:
 

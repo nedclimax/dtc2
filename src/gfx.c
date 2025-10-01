@@ -393,7 +393,7 @@ GFX_Handle gfx_open_window(s32 width, s32 height, Str8 title) { // @DangerousThr
 	Str16 title16 = str16_from_8(scratch.arena, title);
 	TheBaby baby = {
 		.dwExStyle = 0,
-		.lpClassName = class_name,
+		.lpClassName = w32_gfx_class_name,
 		.lpWindowName = (WCHAR *)title16.str,
 		.dwStyle = WS_OVERLAPPEDWINDOW|WS_VISIBLE,
 		.X = CW_USEDEFAULT,
